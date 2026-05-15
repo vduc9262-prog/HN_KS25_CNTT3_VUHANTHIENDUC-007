@@ -97,53 +97,61 @@ values (1,8003,1,'2024-5-20','Đã khám lần đầu'),
 -- Thuộc bệnh nhân có năm sinh < 2000
 
 
--- Viết câu lệnh xóa các bản ghi trong visit_log thỏa mãn:
--- Có log_time trước ngày 20/05/2024
 update APPOINTMENTS
 set fee = fee * 1.1 
 where status = 'Completed' ;
 
+
+-- Viết câu lệnh xóa các bản ghi trong visit_log thỏa mãn:
+-- Có log_time trước ngày 20/05/2024
 delete from VISIT_LOG 
-where log_time < 20/05/2024;
+where log_time < 20-05-2024;
 
 
 -- PHẦN 3: TRUY VẤN CƠ BẢN (15 ĐIỂM)
 --    Câu 1 (5 điểm): Liệt kê các thông tin bác sĩ gồm full_name, specialty và 
 --    rating của những bác sĩ có rating lớn hơn 4.7 hoặc thuộc chuyên khoa “Nhi”.
---    Câu 2 (5 điểm): Liệt kê các thông tin bệnh nhân gồm full_name 
---    và phone_number của những bệnh nhân có ngày sinh trong khoảng từ 1998-01-01 đến 
---    2001-12-31 và số điện thoại bắt đầu bằng “090”.
---    Câu 3 (5 điểm): Liệt kê các phiếu hẹn gồm appointment_id, 
---    appointment_time và fee, trong đó danh sách được sắp xếp theo fee giảm dần và 
---    chỉ hiển thị 2 phiếu ở trang thứ hai.
 
 select full_name,specialty,rating 
 from DOCTORS where rating > 4.7 or specialty = 'Nhi';
 
+
+--    Câu 2 (5 điểm): Liệt kê các thông tin bệnh nhân gồm full_name 
+--    và phone_number của những bệnh nhân có ngày sinh trong khoảng từ 1998-01-01 đến 
+--    2001-12-31 và số điện thoại bắt đầu bằng “090”.
+
 select full_name , phone_number from PATIENTS
 where date_of_birth between 1998-01-01 and 2001-12-31 and phone_number like '090%';
 
+
+
+
+--    Câu 3 (5 điểm): Liệt kê các phiếu hẹn gồm appointment_id, 
+--    appointment_time và fee, trong đó danh sách được sắp xếp theo fee giảm dần và 
+--    chỉ hiển thị 2 phiếu ở trang thứ hai.
 select appointment_id,appointment_time , fee from APPOINTMENTS
 order by fee desc 
 limit 2;
 
 -- PHẦN 4: TRUY VẤN NÂNG CAO (15 ĐIỂM)
+
+
 --    Câu 1 (5 điểm): Liệt kê các thông tin khám gồm họ tên bệnh nhân
 --    , họ tên bác sĩ, chuyên khoa, phí khám và thời điểm hẹn khám, 
 --    với dữ liệu được lấy từ các bảng liên quan trong hệ thống.
---    Câu 2 (5 điểm): Liệt kê các thông tin bác sĩ gồm họ tên bác sĩ
---    và tổng phí khám mà bác sĩ đó đã thực hiện (chỉ tính phiếu Completed), 
---    chỉ hiển thị những bác sĩ có tổng phí lớn hơn 500.000.
---    Câu 3 (5 điểm): Liệt kê các thông tin bác sĩ gồm doctor_id, 
---    full_name và rating của những bác sĩ có điểm đánh giá cao nhất.
-
 select p.full_name,d.full_name, d.specialty, a.appointment_time from PATIENTS p
 join APPOINTMENTS a on p.patient_id = a.patient_id 
 join DOCTORS d on a.doctor_id = d.doctor_id;
 
+
+--    Câu 2 (5 điểm): Liệt kê các thông tin bác sĩ gồm họ tên bác sĩ
+--    và tổng phí khám mà bác sĩ đó đã thực hiện (chỉ tính phiếu Completed), 
+--    chỉ hiển thị những bác sĩ có tổng phí lớn hơn 500.000.
 select d.full_name, sum(fee) as sum_fee from  DOCTORS d
 join APPOINTMENTS a on d.doctor_id = a.doctor_id ;
 
+--    Câu 3 (5 điểm): Liệt kê các thông tin bác sĩ gồm doctor_id, 
+--    full_name và rating của những bác sĩ có điểm đánh giá cao nhất.
 select doctor_id,full_name,rating 
 from DOCTORS 
 order by rating desc
@@ -178,7 +186,6 @@ select * from select_name_and_sumappointments;
 -- note: Visit completed
 -- log_time: thời gian hiện tại của hệ thống
 
-
 delimiter //
 create trigger status_trigger_update 
 after update on appointments
@@ -193,7 +200,6 @@ log_time = date.log_time;
 
 end //
 delimiter ;
-
 
 
 --   Câu 2 (5 điểm): Viết một trigger sao cho khi thêm
